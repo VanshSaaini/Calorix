@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us · CaLoRIX{% endblock %}
+{% block nav_about %}active-link{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ───────── HERO ───────── */
+.hero {
+  padding: 4rem 1rem 3rem;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.hero p {
+  color: var(--text-sub);
+  max-width: 650px;
+  margin: 1rem auto;
+  font-size: 1.05rem;
+}
+
+/* ───────── STATS ───────── */
+.stat-box {
+  text-align: center;
+}
+
+.stat-box h2 {
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-box p {
+  color: var(--text-sub);
+  font-size: 0.85rem;
+}
+
+/* ───────── SECTION ───────── */
+.section {
+  margin-top: 4rem;
+}
+
+.section h3 {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* ───────── FEATURE GRID ───────── */
+.feature-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: all .3s ease;
+  height: 100%;
+}
+
+.feature-box:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature-box i {
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+/* ───────── TIMELINE ───────── */
+.timeline {
+  border-left: 2px solid var(--border);
+  padding-left: 1.5rem;
+}
+
+.timeline-item {
+  margin-bottom: 1.5rem;
+}
+
+.timeline-item h6 {
+  font-weight: 600;
+}
+
+/* ───────── CTA ───────── */
+.cta {
+  text-align: center;
+  margin-top: 4rem;
+  padding: 2rem;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent-soft), transparent);
+}
+
+.cta h4 {
+  font-weight: 700;
+}
+
+.btn-custom {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-custom:hover {
+  background: var(--accent-2);
+}
+
+/* ───────── ANIMATION ───────── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: .6s ease;
+}
+.fade-up.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero fade-up">
+  <h1>We Make Fitness Simple.</h1>
+  <p>
+    CaLoRIX helps you track calories, understand your body, and stay consistent —
+    all in one intelligent platform built for real-world fitness goals.
+  </p>
+</div>
+
+<!-- STATS -->
+<div class="row text-center fade-up">
+  <div class="col-md-4 stat-box">
+    <h2 class="counter" data-target="1000">0</h2>
+    <p>Calories Tracked</p>
+  </div>
+  <div class="col-md-4 stat-box">
+    <h2 class="counter" data-target="500">0</h2>
+    <p>Active Users</p>
+  </div>
+  <div class="col-md-4 stat-box">
+    <h2 class="counter" data-target="100">0</h2>
+    <p>Fitness Goals Achieved</p>
+  </div>
+</div>
+
+<!-- STORY -->
+<div class="section fade-up">
+  <h3>Our Story</h3>
+  <p>
+    CaLoRIX started with a simple problem — tracking calories and fitness data was
+    either too complex or too boring. We built a platform that combines simplicity,
+    accuracy, and performance so users can focus on results, not tools.
+  </p>
+</div>
+
+<!-- FEATURES -->
+<div class="section">
+  <h3 class="fade-up">What We Offer</h3>
+
+  <div class="row g-4 mt-2">
+
+    <div class="col-md-4 fade-up">
+      <div class="feature-box">
+        <i class="bi bi-fire"></i>
+        <h6 class="mt-2">Calorie Tracking</h6>
+        <p>Track daily intake with ease and precision.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4 fade-up">
+      <div class="feature-box">
+        <i class="bi bi-bar-chart"></i>
+        <h6 class="mt-2">Health Metrics</h6>
+        <p>Calculate BMI & BMR instantly.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4 fade-up">
+      <div class="feature-box">
+        <i class="bi bi-shield-lock"></i>
+        <h6 class="mt-2">Secure System</h6>
+        <p>Authentication with modern security.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section fade-up">
+  <h3>Our Journey</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <h6>2026 - Launch</h6>
+      <p>Initial version with core features released.</p>
+    </div>
+    <div class="timeline-item">
+      <h6>Growth</h6>
+      <p>Improving user experience and performance.</p>
+    </div>
+    <div class="timeline-item">
+      <h6>Future</h6>
+      <p>AI-based recommendations and analytics.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta fade-up">
+  <h4>Start Your Fitness Journey Today</h4>
+  <p class="text-muted">Join CaLoRIX and take control of your health.</p>
+  <a href="{% url 'signup' %}" class="btn btn-custom mt-2">
+    Get Started
+  </a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+// Scroll animation — also runs on load so elements in viewport show immediately
+function checkFadeUp() {
+  $('.fade-up').each(function () {
+    if ($(this).offset().top < $(window).scrollTop() + $(window).height() - 80) {
+      $(this).addClass('show');
+    }
+  });
+}
+$(window).on('scroll', checkFadeUp);
+$(document).ready(checkFadeUp);
+
+// Counter animation
+$('.counter').each(function () {
+  let $this = $(this);
+  let target = +$this.data('target');
+
+  $({ countNum: 0 }).animate(
+    { countNum: target },
+    {
+      duration: 2000,
+      easing: 'swing',
+      step: function () {
+        $this.text(Math.floor(this.countNum));
+      },
+      complete: function () {
+        $this.text(this.countNum);
+      }
+    }
+  );
+});
+</script>
+{% endblock %}

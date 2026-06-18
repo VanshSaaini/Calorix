@@ -1,0 +1,656 @@
+{% extends 'base.html' %}
+
+{% block title %}Home · CaLoRIX{% endblock %}
+{% block nav_home %}active-link{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ─── Hero ──────────────────────────────────────────── */
+  .hero-section {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-2) 70%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 4rem 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    right: -120px;
+    top: -120px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    left: -80px;
+    bottom: -80px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-glow);
+    border-radius: 50px;
+    padding: .28rem .9rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    letter-spacing: -.04em;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-sub);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary-cal {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: .75rem 1.8rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    box-shadow: 0 6px 20px var(--accent-glow);
+    transition: all var(--transition);
+  }
+
+  .btn-primary-cal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px var(--accent-glow);
+    color: #fff;
+  }
+
+  .btn-outline-cal {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: .73rem 1.8rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    transition: all var(--transition);
+  }
+
+  .btn-outline-cal:hover {
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+    color: var(--accent);
+  }
+
+  /* ─── Stats row ─────────────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .stat-num {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--accent);
+    letter-spacing: -.03em;
+  }
+
+  .stat-lbl {
+    font-size: .8rem;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-top: .2rem;
+  }
+
+  /* ─── Section header ────────────────────────────────── */
+  .sec-hdr {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--text);
+    letter-spacing: -.02em;
+    margin-bottom: .5rem;
+  }
+
+  .sec-hdr span {
+    color: var(--accent);
+  }
+
+  .sec-sub {
+    color: var(--text-sub);
+    font-size: .92rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* ─── Feature cards ─────────────────────────────────── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .feat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.6rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .feat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .feat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .feat-card:hover::before {
+    opacity: 1;
+  }
+
+  .feat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    transition: background var(--transition);
+  }
+
+  .feat-card:hover .feat-icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+  }
+
+  .feat-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: .5rem;
+  }
+
+  .feat-desc {
+    font-size: .875rem;
+    color: var(--text-sub);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .feat-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: .2rem .65rem;
+    border-radius: 50px;
+  }
+
+  .badge-live {
+    background: rgba(34, 197, 94, .15);
+    color: var(--accent);
+  }
+
+  .badge-soon {
+    background: rgba(245, 158, 11, .12);
+    color: #b45309;
+  }
+
+  .feat-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: .9rem;
+    opacity: 0;
+    transition: opacity var(--transition), gap var(--transition);
+  }
+
+  .feat-card:hover .feat-arrow {
+    opacity: 1;
+    gap: .5rem;
+  }
+
+  /* ─── Lock overlay for unauthenticated ──────────────── */
+  .feat-card.locked {
+    cursor: pointer;
+  }
+
+  .lock-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .75rem;
+    color: var(--text-sub);
+    margin-top: .7rem;
+  }
+
+  /* ─── How it works ──────────────────────────────────── */
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3.5rem;
+    position: relative;
+  }
+
+  .step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.4rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform var(--transition);
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+
+  .step-title {
+    font-weight: 700;
+    font-size: .95rem;
+    color: var(--text);
+    margin-bottom: .4rem;
+  }
+
+  .step-desc {
+    font-size: .845rem;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+
+  /* ─── CTA banner ────────────────────────────────────── */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    box-shadow: 0 12px 40px var(--accent-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: #fff;
+    margin-bottom: .6rem;
+    letter-spacing: -.02em;
+  }
+
+  .cta-sub {
+    color: rgba(255, 255, 255, .82);
+    font-size: .95rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .btn-white {
+    background: #fff;
+    color: var(--accent-2);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: .75rem 2rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+    transition: all var(--transition);
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+    color: var(--accent-2);
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="py-4 pb-5">
+
+  <!-- ═══════════════════ HERO ═══════════════════════ -->
+  <div class="hero-section">
+    <div class="hero-chip"><i class="bi bi-fire"></i> Your Fitness Companion</div>
+    <h1 class="hero-title">Track Smarter.<br><span>Live Healthier.</span></h1>
+    <p class="hero-sub">
+      CaLoRIX gives you science-backed tools to understand your metabolism,
+      body composition, and calorie needs — all in one beautiful dashboard.
+    </p>
+    <div class="hero-actions">
+      {% if user.is_authenticated %}
+      <a href="{% url 'bmr' %}" class="btn-primary-cal">
+        <i class="bi bi-calculator"></i> Calculate My BMR
+      </a>
+      <a href="{% url 'bmi' %}" class="btn-outline-cal">
+        <i class="bi bi-bar-chart-line"></i> Check My BMI
+      </a>
+      {% else %}
+      <a href="{% url 'signup' %}" class="btn-primary-cal">
+        <i class="bi bi-person-plus"></i> Get Started Free
+      </a>
+      <a href="{% url 'login' %}" class="btn-outline-cal">
+        <i class="bi bi-box-arrow-in-right"></i> Log In
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ═════════════════ STATS ROW ══════════════════════ -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">2+</div>
+      <div class="stat-lbl">Science-backed Calculators</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100%</div>
+      <div class="stat-lbl">Free to Use</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">±10%</div>
+      <div class="stat-lbl">BMR Formula Accuracy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">5</div>
+      <div class="stat-lbl">Activity Levels Supported</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ FEATURES ════════════════════ -->
+  <h2 class="sec-hdr">Everything you need to <span>reach your goals</span></h2>
+  <p class="sec-sub">
+    From metabolic analysis to daily nutrition tracking, CaLoRIX brings together the tools
+    fitness enthusiasts and health-conscious individuals actually use.
+  </p>
+
+  <div class="features-grid">
+
+    <!-- BMR -->
+    {% if user.is_authenticated %}
+    <a href="{% url 'bmr' %}" class="feat-card">
+      <span class="feat-badge badge-live">Live</span>
+      <div class="feat-icon"><i class="bi bi-fire"></i></div>
+      <div class="feat-title">BMR Calculator</div>
+      <p class="feat-desc">
+        Find out exactly how many calories your body burns at complete rest using the
+        Mifflin–St Jeor equation — the most accurate formula endorsed by nutrition experts.
+        Get your TDEE and personalised fat-loss / muscle-gain calorie targets.
+      </p>
+      <div class="feat-arrow">Calculate now <i class="bi bi-arrow-right"></i></div>
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}?next={% url 'bmr' %}" class="feat-card locked">
+      <span class="feat-badge badge-live">Live</span>
+      <div class="feat-icon"><i class="bi bi-fire"></i></div>
+      <div class="feat-title">BMR Calculator</div>
+      <p class="feat-desc">
+        Find out exactly how many calories your body burns at complete rest using the
+        Mifflin–St Jeor equation. Get your TDEE and personalised calorie targets.
+      </p>
+      <div class="lock-hint"><i class="bi bi-lock-fill"></i> Login to access</div>
+    </a>
+    {% endif %}
+
+    <!-- BMI -->
+    {% if user.is_authenticated %}
+    <a href="{% url 'bmi' %}" class="feat-card">
+      <span class="feat-badge badge-live">Live</span>
+      <div class="feat-icon"><i class="bi bi-bar-chart-line"></i></div>
+      <div class="feat-title">BMI Calculator</div>
+      <p class="feat-desc">
+        Instantly assess your body mass index with full category breakdown —
+        Underweight, Normal, Overweight, or Obese. Supports both kg/lbs and cm/ft·in,
+        and provides actionable health advice tailored to your result.
+      </p>
+      <div class="feat-arrow">Check now <i class="bi bi-arrow-right"></i></div>
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}?next={% url 'bmi' %}" class="feat-card locked">
+      <span class="feat-badge badge-live">Live</span>
+      <div class="feat-icon"><i class="bi bi-bar-chart-line"></i></div>
+      <div class="feat-title">BMI Calculator</div>
+      <p class="feat-desc">
+        Instantly assess your body mass index with full category breakdown and
+        actionable health advice. Supports kg/lbs and cm/ft·in.
+      </p>
+      <div class="lock-hint"><i class="bi bi-lock-fill"></i> Login to access</div>
+    </a>
+    {% endif %}
+
+    <!-- Food Diary (coming soon) -->
+    <div class="feat-card" style="cursor:default;">
+      <span class="feat-badge badge-soon">Coming Soon</span>
+      <div class="feat-icon"><i class="bi bi-journal-text"></i></div>
+      <div class="feat-title">Food Diary</div>
+      <p class="feat-desc">
+        Log every meal and snack against your personalised daily calorie goal.
+        Search a vast food database, track macros in real-time, and review
+        weekly trends to stay on top of your nutrition.
+      </p>
+    </div>
+
+    <!-- Calorie Goal Planner (coming soon) -->
+    <div class="feat-card" style="cursor:default;">
+      <span class="feat-badge badge-soon">Coming Soon</span>
+      <div class="feat-icon"><i class="bi bi-bullseye"></i></div>
+      <div class="feat-title">Calorie Goal Planner</div>
+      <p class="feat-desc">
+        Set precise fat-loss, maintenance, or muscle-gain targets based on your BMR
+        and TDEE. Visual progress rings and weekly summaries keep you motivated
+        and on track.
+      </p>
+    </div>
+
+    <!-- Workout Tracker (coming soon) -->
+    <div class="feat-card" style="cursor:default;">
+      <span class="feat-badge badge-soon">Coming Soon</span>
+      <div class="feat-icon"><i class="bi bi-lightning-charge"></i></div>
+      <div class="feat-title">Workout Tracker</div>
+      <p class="feat-desc">
+        Log cardio and strength sessions, track calories burned, and see how your
+        activity level affects your TDEE. Connects seamlessly with your calorie
+        budget for a complete picture.
+      </p>
+    </div>
+
+    <!-- Challenges (coming soon) -->
+    <div class="feat-card" style="cursor:default;">
+      <span class="feat-badge badge-soon">Coming Soon</span>
+      <div class="feat-icon"><i class="bi bi-trophy"></i></div>
+      <div class="feat-title">Fitness Challenges</div>
+      <p class="feat-desc">
+        Join weekly community challenges — step counts, hydration goals, and
+        calorie streaks. Earn badges, climb leaderboards, and stay accountable
+        alongside other CaLoRIX members.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ HOW IT WORKS ═════════════════════ -->
+  <h2 class="sec-hdr">How <span>CaLoRIX</span> works</h2>
+  <p class="sec-sub">Three simple steps to a smarter, healthier you.</p>
+
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Create your free account</div>
+      <p class="step-desc">Sign up in seconds. No credit card, no subscriptions — CaLoRIX is completely free.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Run your first calculation</div>
+      <p class="step-desc">Enter your stats to get your BMR and BMI instantly. Results are saved to your profile
+        automatically.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Set a goal & track progress</div>
+      <p class="step-desc">Use your TDEE to set a calorie budget for fat loss, maintenance, or muscle gain — then log
+        daily to stay on course.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">Review & adjust over time</div>
+      <p class="step-desc">Recalculate every 4–6 weeks as your weight or activity changes. Your metabolic data updates
+        automatically.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ CTA BANNER ══════════════════ -->
+  {% if not user.is_authenticated %}
+  <div class="cta-banner">
+    <div class="cta-title">Ready to transform your health?</div>
+    <p class="cta-sub">Join CaLoRIX today — it's completely free. No ads, no premium paywalls.</p>
+    <a href="{% url 'signup' %}" class="btn-white">
+      <i class="bi bi-person-plus-fill"></i> Create Free Account
+    </a>
+  </div>
+  {% else %}
+  <div class="cta-banner">
+    <div class="cta-title">Welcome back, {{ user.first_name }}!</div>
+    <p class="cta-sub">Pick up where you left off — your tools are ready.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="{% url 'bmr' %}" class="btn-white">
+        <i class="bi bi-fire"></i> BMR Calculator
+      </a>
+      <a href="{% url 'bmi' %}" class="btn-white"
+        style="background:rgba(255,255,255,.18);color:#fff;border:2px solid rgba(255,255,255,.4);">
+        <i class="bi bi-bar-chart-line"></i> BMI Calculator
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

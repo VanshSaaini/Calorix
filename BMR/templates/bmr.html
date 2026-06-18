@@ -1,0 +1,1203 @@
+{% extends 'base.html' %}
+{% block title %}BMR Calculator — CaLoRIX{% endblock %}
+{% block nav_explore %}active-link{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ═══════════════════════════════════════════════════
+   SHARED PAGE STYLES  (same tokens as base.html)
+═══════════════════════════════════════════════════ */
+  .pg-hero {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-2) 65%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.6rem 2.4rem 2.2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pg-hero::after {
+    content: '';
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-glow);
+    border-radius: 50px;
+    padding: .28rem .85rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: .9rem;
+  }
+
+  .pg-hero h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.75rem, 4vw, 2.7rem);
+    letter-spacing: -.03em;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: .7rem;
+  }
+
+  .pg-hero h1 span {
+    color: var(--accent);
+  }
+
+  .pg-hero p {
+    font-size: .95rem;
+    color: var(--text-sub);
+    line-height: 1.75;
+    max-width: 580px;
+    margin: 0;
+  }
+
+  .sec-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
+  }
+
+  .sec-title i {
+    color: var(--accent);
+  }
+
+  /* Card */
+  .c-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .c-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Info grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: .9rem;
+    margin-bottom: 2rem;
+  }
+
+  .info-card {
+    padding: 1.3rem 1.2rem;
+  }
+
+  .ic-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .8rem;
+  }
+
+  .ic-icon i {
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  .info-card h6 {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .4rem;
+  }
+
+  .info-card p {
+    font-size: .855rem;
+    color: var(--text-sub);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Factor pills */
+  .factor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: .55rem;
+    margin-bottom: 2rem;
+  }
+
+  .factor-pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: .62rem .95rem;
+    font-size: .855rem;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .factor-pill:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+
+  .factor-pill i {
+    color: var(--accent);
+    font-size: .8rem;
+    flex-shrink: 0;
+  }
+
+  /* Table */
+  .t-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+  }
+
+  .t-wrap table {
+    margin: 0;
+  }
+
+  .t-wrap thead th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: .8rem 1rem;
+    border-bottom: 1px solid var(--border) !important;
+    border-top: none !important;
+  }
+
+  .t-wrap tbody td {
+    font-size: .855rem;
+    color: var(--text-sub);
+    padding: .7rem 1rem;
+    border-color: var(--border) !important;
+    vertical-align: middle;
+  }
+
+  .t-wrap tbody tr:hover td {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+
+  .bp {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border-radius: 50px;
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .bp-ok {
+    background: rgba(34, 197, 94, .12);
+    color: #16a34a;
+  }
+
+  .bp-low {
+    background: rgba(239, 68, 68, .12);
+    color: #ef4444;
+  }
+
+  .bp-warn {
+    background: rgba(245, 158, 11, .12);
+    color: #b45309;
+  }
+
+  /* Calculator card */
+  .calc-card {
+    padding: 2rem 1.8rem;
+    border-radius: 20px;
+  }
+
+  .calc-hdr {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin-bottom: 1.6rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .calc-ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 4px 14px var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .calc-ico i {
+    color: #fff;
+    font-size: 1.1rem;
+  }
+
+  .calc-hdr h2 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .calc-hdr p {
+    font-size: .78rem;
+    color: var(--text-sub);
+    margin: 0;
+  }
+
+  .f-lbl {
+    display: block;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-sub);
+    margin-bottom: .45rem;
+  }
+
+  .g-row {
+    display: flex;
+    gap: .55rem;
+  }
+
+  .g-btn {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text-sub);
+    padding: .6rem .9rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    transition: all var(--transition);
+  }
+
+  .g-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .g-btn.sel {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .f-ctrl {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .9rem;
+    font-weight: 500;
+    padding: .65rem .95rem;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .f-ctrl::placeholder {
+    color: var(--text-sub);
+    font-weight: 400;
+  }
+
+  .f-ctrl:focus {
+    border-color: var(--accent);
+    background: var(--bg-2);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .u-row {
+    display: flex;
+    gap: .55rem;
+    align-items: flex-end;
+  }
+
+  .u-row .fw {
+    flex: 1;
+  }
+
+  .u-tgl {
+    display: flex;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .u-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-sub);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    padding: .5rem .8rem;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .u-btn.on {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .u-btn:not(.on):hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .sw {
+    position: relative;
+  }
+
+  .sw::after {
+    content: '\F282';
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    right: .9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-sub);
+    pointer-events: none;
+    font-size: .78rem;
+  }
+
+  .btn-go {
+    width: 100%;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .92rem;
+    font-weight: 700;
+    padding: .82rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    box-shadow: 0 4px 16px var(--accent-glow);
+    margin-top: .4rem;
+    transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+  }
+
+  .btn-go:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 22px var(--accent-glow);
+  }
+
+  .btn-go:active {
+    transform: translateY(0);
+  }
+
+  .btn-go .spin {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-width: 2px;
+    display: none;
+  }
+
+  .btn-go.loading .bi {
+    display: none;
+  }
+
+  .btn-go.loading .spin {
+    display: inline-block;
+  }
+
+  /* Result */
+  .res-panel {
+    display: none;
+    margin-top: 1.3rem;
+    background: var(--bg-card);
+    border: 1.5px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 0 0 4px var(--accent-glow);
+    animation: fadeUp .35s ease;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .res-panel.show {
+    display: block;
+  }
+
+  .r-tag {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .3rem;
+  }
+
+  .r-num {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: 2.7rem;
+    color: var(--text);
+    letter-spacing: -.04em;
+    line-height: 1;
+  }
+
+  .r-num small {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-left: .3rem;
+  }
+
+  .r-sub {
+    font-size: .855rem;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+
+  .g-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .55rem;
+    margin-top: 1rem;
+  }
+
+  .g-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: .7rem .85rem;
+    text-align: center;
+    transition: background var(--transition);
+  }
+
+  .g-card:hover {
+    background: var(--accent-soft);
+  }
+
+  .g-card .gn {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .g-card .gv {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .g-card .gd {
+    font-size: .7rem;
+    color: var(--text-sub);
+  }
+
+  /* Tips */
+  .tip-card {
+    padding: 1.5rem;
+  }
+
+  .tip-item {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    margin-bottom: .75rem;
+  }
+
+  .tip-n {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: .68rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .tip-t {
+    font-size: .855rem;
+    color: var(--text-sub);
+    line-height: 1.6;
+  }
+
+  /* Formula */
+  .formula-card {
+    padding: 2rem;
+    border-radius: 20px;
+    margin-top: 2rem;
+  }
+
+  .fbox {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.3rem;
+    font-family: 'Courier New', monospace;
+    font-size: .88rem;
+    color: var(--text);
+    line-height: 2.1;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+
+  .fm {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .fm-m {
+    color: #3b82f6;
+    font-weight: 700;
+  }
+
+  .fm-f {
+    color: #ec4899;
+    font-weight: 700;
+  }
+
+  code.p {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 4px;
+    padding: .1rem .4rem;
+    font-size: .83rem;
+  }
+
+  .vtbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .855rem;
+    margin-top: .8rem;
+  }
+
+  .vtbl th {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: .55rem .8rem;
+    border-bottom: 2px solid var(--accent-soft);
+    text-align: left;
+  }
+
+  .vtbl td {
+    padding: .6rem .8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-sub);
+  }
+
+  .vtbl tr:last-child td {
+    border-bottom: none;
+  }
+
+  .note-b {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--radius-sm);
+    padding: .85rem 1rem;
+    font-size: .84rem;
+    color: var(--text-sub);
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    margin-top: 1rem;
+  }
+
+  .note-b i {
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .act-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .6rem;
+    margin-top: .9rem;
+  }
+
+  .act-c {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: .7rem .85rem;
+    transition: background var(--transition);
+  }
+
+  .act-c:hover {
+    background: var(--accent-soft);
+  }
+
+  .act-c .an {
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .act-c .av {
+    font-size: .95rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .act-c .ad {
+    font-size: .72rem;
+    color: var(--text-sub);
+  }
+
+  @media(max-width:575px) {
+
+    .calc-card,
+    .formula-card {
+      padding: 1.4rem 1.1rem;
+    }
+
+    .pg-hero {
+      padding: 1.7rem 1.3rem;
+    }
+
+    .g-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="py-4 pb-5">
+
+  <!-- HERO -->
+  <div class="pg-hero">
+    <div class="hero-chip"><i class="bi bi-fire"></i> Metabolism &amp; Energy</div>
+    <h1>Basal Metabolic Rate<br><span>Calculator</span></h1>
+    <p>Discover how many calories your body burns at complete rest — the foundation of every smart nutrition plan.</p>
+  </div>
+
+  <!-- WHAT IS BMR -->
+  <h2 class="sec-title"><i class="bi bi-lightbulb"></i> What is BMR?</h2>
+  <div class="info-grid">
+    <div class="c-card info-card">
+      <div class="ic-icon"><i class="bi bi-heart-pulse"></i></div>
+      <h6>Definition</h6>
+      <p>BMR is the number of calories your body needs to sustain vital functions — breathing, circulation, cell repair,
+        and temperature regulation — while at complete rest.</p>
+    </div>
+    <div class="c-card info-card">
+      <div class="ic-icon"><i class="bi bi-pie-chart"></i></div>
+      <h6>Why It Matters</h6>
+      <p>BMR accounts for <strong style="color:var(--text)">60–75%</strong> of your total daily calorie burn. It is the
+        starting point for accurate fat loss, muscle gain, or maintenance targets.</p>
+    </div>
+    <div class="c-card info-card">
+      <div class="ic-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <h6>BMR vs TDEE</h6>
+      <p>Your <strong style="color:var(--text)">TDEE</strong> = BMR × activity multiplier — it adds calories burned
+        through movement and exercise on top of your resting baseline.</p>
+    </div>
+    <div class="c-card info-card">
+      <div class="ic-icon"><i class="bi bi-clock-history"></i></div>
+      <h6>Changes Over Time</h6>
+      <p>BMR drops ~2% per decade. Strength training and adequate protein intake are the most effective ways to preserve
+        metabolic rate as you age.</p>
+    </div>
+  </div>
+
+  <!-- FACTORS -->
+  <h2 class="sec-title"><i class="bi bi-sliders"></i> Factors That Affect BMR</h2>
+  <div class="factor-grid">
+    <div class="factor-pill"><i class="bi bi-person"></i> Age — decreases ~2% per decade after 20</div>
+    <div class="factor-pill"><i class="bi bi-gender-ambiguous"></i> Biological sex — males generally have higher BMR
+    </div>
+    <div class="factor-pill"><i class="bi bi-rulers"></i> Height — taller individuals need more energy</div>
+    <div class="factor-pill"><i class="bi bi-bar-chart"></i> Weight — more mass means more energy at rest</div>
+    <div class="factor-pill"><i class="bi bi-lightning-charge"></i> Muscle mass — burns more than fat tissue at rest
+    </div>
+    <div class="factor-pill"><i class="bi bi-thermometer-half"></i> Body temperature — fever raises BMR sharply</div>
+    <div class="factor-pill"><i class="bi bi-capsule"></i> Hormones — thyroid directly regulates metabolism</div>
+    <div class="factor-pill"><i class="bi bi-moon-stars"></i> Sleep quality — poor sleep suppresses metabolic rate</div>
+  </div>
+
+  <!-- REFERENCE TABLE -->
+  <h2 class="sec-title"><i class="bi bi-table"></i> Average BMR Reference Ranges</h2>
+  <div class="t-wrap">
+    <table class="table table-borderless mb-0">
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Avg. Range</th>
+          <th>Based on</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Adult Male (18–35)</td>
+          <td>1,600 – 2,000 kcal/day</td>
+          <td>~70 kg, 175 cm</td>
+          <td><span class="bp bp-ok">Normal</span></td>
+        </tr>
+        <tr>
+          <td>Adult Female (18–35)</td>
+          <td>1,300 – 1,600 kcal/day</td>
+          <td>~60 kg, 162 cm</td>
+          <td><span class="bp bp-ok">Normal</span></td>
+        </tr>
+        <tr>
+          <td>Below 1,200 kcal/day</td>
+          <td>Any gender</td>
+          <td>Very light build</td>
+          <td><span class="bp bp-low">Low</span></td>
+        </tr>
+        <tr>
+          <td>Above 2,200 kcal/day</td>
+          <td>Tall / muscular males</td>
+          <td>High muscle mass</td>
+          <td><span class="bp bp-warn">High</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CALCULATOR + TIPS -->
+  <div class="row g-4 align-items-start">
+
+    <!-- Form col -->
+    <div class="col-12 col-lg-7">
+      <div class="c-card calc-card">
+        <div class="calc-hdr">
+          <div class="calc-ico"><i class="bi bi-calculator-fill"></i></div>
+          <div>
+            <h2>Calculate Your BMR</h2>
+            <p>All fields are required for an accurate result</p>
+          </div>
+        </div>
+
+        <form method="POST" id="bmrForm" novalidate>
+          {% csrf_token %}
+
+          <!-- Gender -->
+          <div class="mb-4">
+            <label class="f-lbl">Biological Sex</label>
+            <div class="g-row">
+              <button type="button" class="g-btn sel" data-g="male" onclick="pickGender(this,'male')"><i
+                  class="bi bi-gender-male"></i> Male</button>
+              <button type="button" class="g-btn" data-g="female" onclick="pickGender(this,'female')"><i
+                  class="bi bi-gender-female"></i> Female</button>
+            </div>
+            <input type="hidden" id="gVal" name="gender" value="male">
+          </div>
+
+          <!-- Age -->
+          <div class="mb-4">
+            <label class="f-lbl" for="bAge">Age <span
+                style="color:var(--text-sub);font-weight:400;text-transform:none;letter-spacing:0">(10–100
+                yrs)</span></label>
+            <input type="number" id="bAge" name="age" class="f-ctrl" placeholder="e.g. 25" min="10" max="100"
+              value="{{ form_data.age|default:'' }}" required>
+          </div>
+
+          <!-- Weight -->
+          <div class="mb-4">
+            <label class="f-lbl">Weight</label>
+            <div class="u-row">
+              <div class="fw"><input type="number" id="bWeight" name="weight" class="f-ctrl" placeholder="e.g. 70"
+                  min="1" step="0.1" value="{{ form_data.weight|default:'' }}" required></div>
+              <div class="u-tgl">
+                <button type="button" class="u-btn on" id="wKg" onclick="setWU('kg')">kg</button>
+                <button type="button" class="u-btn" id="wLb" onclick="setWU('lb')">lb</button>
+              </div>
+            </div>
+            <input type="hidden" id="wUnit" name="weight_unit" value="kg">
+          </div>
+
+          <!-- Height -->
+          <div class="mb-4">
+            <label class="f-lbl">Height</label>
+            <div id="hCmW">
+              <div class="u-row">
+                <div class="fw"><input type="number" id="hCm" name="height_cm" class="f-ctrl" placeholder="e.g. 175"
+                    min="50" max="280" step="0.1" value="{{ form_data.height_cm|default:'' }}"></div>
+                <div class="u-tgl">
+                  <button type="button" class="u-btn on" id="hCmB" onclick="setHU('cm')">cm</button>
+                  <button type="button" class="u-btn" id="hInB" onclick="setHU('in')">in</button>
+                </div>
+              </div>
+            </div>
+            <div id="hInW" style="display:none">
+              <div class="u-row">
+                <div class="fw"><input type="number" id="hFt" name="height_ft" class="f-ctrl" placeholder="ft" min="1"
+                    max="9"></div>
+                <div class="fw"><input type="number" id="hIn" name="height_in" class="f-ctrl" placeholder="in" min="0"
+                    max="11" step="0.1"></div>
+                <div class="u-tgl">
+                  <button type="button" class="u-btn" id="hCmB2" onclick="setHU('cm')">cm</button>
+                  <button type="button" class="u-btn on" id="hInB2" onclick="setHU('in')">in</button>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="hUnit" name="height_unit" value="cm">
+          </div>
+
+          <!-- Activity -->
+          <div class="mb-4">
+            <label class="f-lbl" for="bAct">Activity Level</label>
+            <div class="sw">
+              <select id="bAct" name="activity" class="f-ctrl">
+                <option value="" disabled selected>Select your activity level…</option>
+                <option value="1.2" {% if form_data.activity == "1.2" %}selected{% endif %}>Sedentary — little or no
+                  exercise</option>
+                <option value="1.375" {% if form_data.activity == "1.375" %}selected{% endif %}>Lightly active — exercise
+                  1–3 days/week</option>
+                <option value="1.55" {% if form_data.activity == "1.55" %}selected{% endif %}>Moderately active — exercise
+                  3–5 days/week</option>
+                <option value="1.725" {% if form_data.activity == "1.725" %}selected{% endif %}>Very active — hard
+                  exercise 6–7 days/week</option>
+                <option value="1.9" {% if form_data.activity == "1.9" %}selected{% endif %}>Extra active — very hard
+                  exercise / physical job</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-go" id="bmrBtn">
+            <i class="bi bi-calculator"></i>
+            <span class="spinner-border spin" role="status"></span>
+            Calculate My BMR
+          </button>
+        </form>
+
+        {% if BMR %}
+        <div class="res-panel show" id="bmrRes">
+          <div class="r-tag"><i class="bi bi-fire me-1"></i>Your BMR</div>
+          <div class="r-num" id="bmrNum">{{ BMR }}<small>kcal / day</small></div>
+          <p class="r-sub mt-2 mb-0">{{ advice }}</p>
+          {% if TDEE %}
+          <div style="border-top:1px solid var(--border);margin-top:1.2rem;padding-top:1.2rem">
+            <div class="r-tag"><i class="bi bi-person-walking me-1"></i>Your TDEE (with activity)</div>
+            <div class="r-num" style="font-size:2.1rem">{{ TDEE }}<small>kcal / day</small></div>
+            <div class="g-grid mt-2">
+              <div class="g-card">
+                <div class="gn">Fat Loss</div>
+                <div class="gv">{{ TDEE_minus }}</div>
+                <div class="gd">−500 kcal/day</div>
+              </div>
+              <div class="g-card">
+                <div class="gn">Maintain</div>
+                <div class="gv">{{ TDEE }}</div>
+                <div class="gd">Stay current</div>
+              </div>
+              <div class="g-card">
+                <div class="gn">Muscle Gain</div>
+                <div class="gv">{{ TDEE_plus }}</div>
+                <div class="gd">+300 kcal/day</div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tips col -->
+    <div class="col-12 col-lg-5 d-flex flex-column gap-4">
+      <div class="c-card tip-card">
+        <h3 class="sec-title" style="font-size:.95rem;margin-bottom:1rem"><i class="bi bi-info-circle"></i> How to Use
+        </h3>
+        <div class="tip-item">
+          <div class="tip-n">1</div>
+          <div class="tip-t">Enter your biological sex, age, current weight and height as accurately as possible.</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-n">2</div>
+          <div class="tip-t">Switch between kg/lb and cm/in using the unit toggles next to each field.</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-n">3</div>
+          <div class="tip-t">Select your real activity level — most people overestimate this; be honest.</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-n">4</div>
+          <div class="tip-t">Your result shows BMR (rest calories) and your TDEE (total with activity).</div>
+        </div>
+        <div class="tip-item" style="margin-bottom:0">
+          <div class="tip-n">5</div>
+          <div class="tip-t">Recalculate every 4–6 weeks as weight or lifestyle changes.</div>
+        </div>
+      </div>
+
+      <div class="c-card" style="padding:1.4rem">
+        <h3 class="sec-title" style="font-size:.95rem;margin-bottom:.9rem"><i class="bi bi-egg-fried"></i> Recommended
+          Macros by BMR</h3>
+        <div class="t-wrap" style="margin-bottom:0">
+          <table class="table table-borderless mb-0">
+            <thead>
+              <tr>
+                <th>BMR Range</th>
+                <th>Protein</th>
+                <th>Carbs</th>
+                <th>Fats</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>&lt; 1,400</td>
+                <td>30%</td>
+                <td>40%</td>
+                <td>30%</td>
+              </tr>
+              <tr>
+                <td>1,400–1,800</td>
+                <td>25%</td>
+                <td>45%</td>
+                <td>30%</td>
+              </tr>
+              <tr>
+                <td>1,800–2,200</td>
+                <td>30%</td>
+                <td>40%</td>
+                <td>30%</td>
+              </tr>
+              <tr>
+                <td>2,200+</td>
+                <td>30%</td>
+                <td>50%</td>
+                <td>20%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULA -->
+  <div class="c-card formula-card">
+    <div class="row align-items-start g-4">
+      <div class="col-12 col-md-7">
+        <div class="hero-chip mb-3"><i class="bi bi-journal-code"></i> The Science</div>
+        <h2 class="sec-title" style="font-size:1.2rem"><i class="bi bi-function"></i> Mifflin–St Jeor Equation</h2>
+        <p style="font-size:.88rem;color:var(--text-sub);line-height:1.75;margin-bottom:.4rem">
+          Developed in <strong style="color:var(--text)">1990</strong> by MD Mifflin and ST St Jeor. Endorsed by the
+          <strong style="color:var(--text)">Academy of Nutrition and Dietetics</strong> as the most accurate formula for
+          estimating resting metabolic rate in healthy adults.
+        </p>
+        <div class="fbox">
+          <div><span class="fm-m">♂ Men:&nbsp;&nbsp;</span> BMR = <span class="fm">(10 × W)</span> + <span
+              class="fm">(6.25 × H)</span> − <span class="fm">(5 × A)</span> + <strong>5</strong></div>
+          <div><span class="fm-f">♀ Women:</span> BMR = <span class="fm">(10 × W)</span> + <span class="fm">(6.25 ×
+              H)</span> − <span class="fm">(5 × A)</span> − <strong>161</strong></div>
+        </div>
+        <p style="font-size:.8rem;color:var(--text-sub)">
+          <code class="p">W</code> = weight in kg &nbsp;·&nbsp; <code class="p">H</code> = height in cm &nbsp;·&nbsp;
+          <code class="p">A</code> = age in years
+        </p>
+      </div>
+      <div class="col-12 col-md-5">
+        <h4
+          style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:.6rem">
+          Variable Reference</h4>
+        <table class="vtbl">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Meaning</th>
+              <th>Unit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="p">W</code></td>
+              <td>Body mass</td>
+              <td>kg</td>
+            </tr>
+            <tr>
+              <td><code class="p">H</code></td>
+              <td>Body height</td>
+              <td>cm</td>
+            </tr>
+            <tr>
+              <td><code class="p">A</code></td>
+              <td>Age</td>
+              <td>years</td>
+            </tr>
+            <tr>
+              <td><code class="p">+5</code></td>
+              <td>Male constant</td>
+              <td>kcal/day</td>
+            </tr>
+            <tr>
+              <td><code class="p">−161</code></td>
+              <td>Female constant</td>
+              <td>kcal/day</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note-b"><i class="bi bi-patch-check-fill"></i><span>Accurate within <strong
+              style="color:var(--text)">±10%</strong> for most healthy adults — more reliable than the original
+            Harris–Benedict (1919) formula.</span></div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-top:1.8rem;padding-top:1.5rem">
+      <h4 class="sec-title" style="font-size:.95rem"><i class="bi bi-person-walking"></i> Activity Multipliers (PAL)
+      </h4>
+      <div class="act-row">
+        <div class="act-c">
+          <div class="an">Sedentary</div>
+          <div class="av">× 1.200</div>
+          <div class="ad">No / minimal exercise</div>
+        </div>
+        <div class="act-c">
+          <div class="an">Light</div>
+          <div class="av">× 1.375</div>
+          <div class="ad">1–3 days/week</div>
+        </div>
+        <div class="act-c">
+          <div class="an">Moderate</div>
+          <div class="av">× 1.550</div>
+          <div class="ad">3–5 days/week</div>
+        </div>
+        <div class="act-c">
+          <div class="an">Very Active</div>
+          <div class="av">× 1.725</div>
+          <div class="ad">6–7 days/week</div>
+        </div>
+        <div class="act-c">
+          <div class="an">Extra Active</div>
+          <div class="av">× 1.900</div>
+          <div class="ad">Physical job / athlete</div>
+        </div>
+      </div>
+      <p style="font-size:.82rem;color:var(--text-sub);margin-top:.9rem;line-height:1.65">
+        <strong style="color:var(--text)">TDEE = BMR × Multiplier.</strong>&nbsp; Subtract 300–500 kcal for fat loss ·
+        Add 250–400 kcal for muscle gain.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  function pickGender(btn, g) {
+    $('.g-btn').removeClass('sel');
+    $(btn).addClass('sel');
+    $('#gVal').val(g);
+  }
+  function setWU(u) {
+    $('#wKg,#wLb').removeClass('on');
+    u === 'kg' ? $('#wKg').addClass('on') : $('#wLb').addClass('on');
+    $('#wUnit').val(u);
+    $('#bWeight').attr('placeholder', u === 'kg' ? 'e.g. 70' : 'e.g. 154').val('');
+  }
+  function setHU(u) {
+    if (u === 'cm') {
+      $('#hCmW').show(); $('#hInW').hide();
+      $('#hCmB,#hCmB2').addClass('on'); $('#hInB,#hInB2').removeClass('on');
+    } else {
+      $('#hCmW').hide(); $('#hInW').show();
+      $('#hInB,#hInB2').addClass('on'); $('#hCmB,#hCmB2').removeClass('on');
+    }
+    $('#hUnit').val(u);
+  }
+  function animCount(el, val) {
+    let c = 0, step = val / 45;
+    let iv = setInterval(() => { c += step; if (c >= val) { c = val; clearInterval(iv); } el.text(Math.round(c)); }, 18);
+  }
+
+  $(function () {
+    {% if form_data %}
+    if ("{{ form_data.weight_unit|default:'kg' }}" !== 'kg') setWU("{{ form_data.weight_unit }}");
+    if ("{{ form_data.height_unit|default:'cm' }}" !== 'cm') setHU("{{ form_data.height_unit }}");
+    if ("{{ form_data.gender|default:'male' }}" !== 'male') { $('.g-btn').removeClass('sel'); $('[data-g="female"]').addClass('sel'); $('#gVal').val('female'); }
+    {% endif %}
+
+    {% if BMR %}
+    var bmrFinal = parseFloat("{{ BMR }}");
+    var numEl = $('#bmrNum');
+    var rawText = numEl.html();
+    var smallTag = numEl.find('small')[0] ? numEl.find('small').prop('outerHTML') : '<small>kcal / day</small>';
+    numEl.html('<span id="bmrCounter">0</span>' + smallTag);
+    animCount($('#bmrCounter'), bmrFinal);
+    $('html,body').animate({ scrollTop: $('#bmrRes').offset().top - 90 }, 650);
+    {% endif %}
+
+    $('#bmrForm').on('submit', function (e) {
+      var age = +$('#bAge').val(), w = +$('#bWeight').val(), act = $('#bAct').val(), ok = true;
+      if (!age || age < 10 || age > 100) { alert('Enter a valid age (10–100).'); ok = false; }
+      else if (!w || w <= 0) { alert('Enter a valid weight.'); ok = false; }
+      else if (!act) { alert('Please select an activity level.'); ok = false; }
+      if (!ok) { e.preventDefault(); return; }
+      $('#bmrBtn').addClass('loading').prop('disabled', true);
+    });
+  });
+</script>
+{% endblock %}

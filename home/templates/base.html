@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}CaLoRIX{% endblock %}</title>
+  {% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    /* ─── Theme Variables ───────────────────────────────────────────── */
+    :root {
+      --bg: #f8f9fa;
+      --bg-2: #ffffff;
+      --bg-card: #ffffff;
+      --nav-bg: #ffffff;
+      --text: #212529;
+      --text-sub: #6c757d;
+      --accent: #198754;
+      --accent-2: #146c43;
+      --accent-glow: rgba(25, 135, 84, 0.14);
+      --accent-soft: #eef7f1;
+      --border: #dee2e6;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --radius: 6px;
+      --radius-sm: 4px;
+      --transition: 0.16s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1f2328;
+      --bg-2: #2b3035;
+      --bg-card: #24292e;
+      --nav-bg: #24292e;
+      --text: #f1f3f5;
+      --text-sub: #adb5bd;
+      --accent: #75b798;
+      --accent-2: #52a476;
+      --accent-glow: rgba(117, 183, 152, 0.18);
+      --accent-soft: rgba(117, 183, 152, 0.12);
+      --border: #495057;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+      --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.30);
+    }
+
+    /* ─── Base ──────────────────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background-color var(--transition), color var(--transition);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Navbar ────────────────────────────────────────────────────── */
+    .navbar {
+      background: var(--nav-bg) !important;
+      border-bottom: 1px solid var(--border);
+      padding: 0.55rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1040;
+      box-shadow: var(--shadow);
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    /* Brand */
+    .navbar-brand {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+      color: var(--text) !important;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      text-decoration: none;
+      transition: opacity var(--transition);
+    }
+
+    .navbar-brand:hover {
+      opacity: 0.82;
+    }
+
+    .brand-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-badge i {
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    /* Nav links */
+    .navbar-nav .nav-link {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-sub) !important;
+      padding: 0.45rem 0.85rem !important;
+      border-radius: var(--radius-sm);
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: var(--text) !important;
+      background: var(--accent-soft);
+    }
+
+    .navbar-nav .nav-link.active-link {
+      color: var(--accent) !important;
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 0.5rem;
+      min-width: 195px;
+      margin-top: 0.5rem !important;
+      animation: none;
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-item {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-sub);
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .dropdown-item i {
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+
+    .dropdown-item:hover {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .dropdown-divider {
+      border-color: var(--border);
+      margin: 0.3rem 0;
+    }
+
+    .dropdown-header {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      padding: 0.5rem 0.85rem 0.25rem;
+    }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-2);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.45rem 1rem 0.45rem 2.5rem;
+      width: 190px;
+      outline: none;
+      transition: width var(--transition), border-color var(--transition),
+        box-shadow var(--transition), background var(--transition);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-sub);
+    }
+
+    .search-input:focus {
+      width: 240px;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.82rem;
+      color: var(--text-sub);
+      font-size: 0.82rem;
+      pointer-events: none;
+      transition: color var(--transition);
+    }
+
+    .search-wrap:focus-within .search-icon {
+      color: var(--accent);
+    }
+
+    /* Theme Toggle */
+    .theme-switch-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .theme-icon {
+      font-size: 0.95rem;
+    }
+
+    #icon-sun {
+      color: #f59e0b;
+    }
+
+    #icon-moon {
+      color: #818cf8;
+    }
+
+    .t-switch {
+      position: relative;
+      width: 46px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .t-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .t-slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.12);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    [data-theme="dark"] .t-slider {
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    .t-switch input:checked+.t-slider {
+      background: var(--accent);
+      border-color: transparent;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    .t-slider::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      left: 3px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: left var(--transition);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
+
+    .t-switch input:checked+.t-slider::after {
+      left: calc(100% - 21px);
+    }
+
+    /* Hamburger */
+    .navbar-toggler {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.55rem;
+      background: var(--bg-2);
+      transition: background var(--transition);
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+      width: 1.1em;
+      height: 1.1em;
+    }
+
+    /* Mobile collapse panel */
+    @media (max-width: 991.98px) {
+      .navbar-collapse {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        margin-top: 0.6rem;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .search-input,
+      .search-input:focus {
+        width: 100% !important;
+      }
+
+      .search-wrap {
+        width: 100%;
+      }
+
+      .theme-switch-wrap {
+        padding: 0.3rem 0.1rem;
+      }
+    }
+
+    /* ─── Offcanvas (themed) ────────────────────────────────────────── */
+    .offcanvas {
+      background: var(--bg-card) !important;
+      color: var(--text) !important;
+      border-right: 1px solid var(--border) !important;
+    }
+
+    .offcanvas-header {
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .offcanvas-title {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    [data-theme="dark"] .btn-close {
+      filter: invert(1) grayscale(1);
+    }
+
+    /* ─── Main content ──────────────────────────────────────────────── */
+    .main-wrapper {
+      min-height: calc(100vh - 62px - 52px);
+      padding: 2.5rem 0;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 1.1rem 0;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      transition: background var(--transition);
+    }
+
+    .site-footer a {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .site-footer a:hover {
+      color: var(--accent);
+    }
+
+    /* ─── Scrollbar + Selection ─────────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 50px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    ::selection {
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    /* ─── Flash messages ────────────────────────────────────────────── */
+    .flash-container {
+      position: fixed;
+      top: 78px;
+      right: 1.25rem;
+      z-index: 1055;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      max-width: 340px;
+      width: calc(100% - 2.5rem);
+    }
+
+    .flash-msg {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.8rem 1rem;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.875rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      animation: slideIn 0.25s ease;
+    }
+
+    .flash-msg.success {
+      border-left: 3px solid #22c55e;
+    }
+
+    .flash-msg.error {
+      border-left: 3px solid #ef4444;
+    }
+
+    .flash-msg.warning {
+      border-left: 3px solid #f59e0b;
+    }
+
+    .flash-msg.info {
+      border-left: 3px solid var(--accent);
+    }
+
+    .flash-close {
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .flash-close:hover {
+      color: var(--text);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Classic site-wide simplification */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .hero-title,
+    .sec-hdr,
+    .sec-title,
+    .dashboard-title,
+    .login-title,
+    .signup-title {
+      font-family: Georgia, 'Times New Roman', serif !important;
+      letter-spacing: 0 !important;
+      font-weight: 700 !important;
+    }
+
+    .hero-section,
+    .pg-hero,
+    .cta-banner,
+    .c-card,
+    .feat-card,
+    .step-card,
+    .stat-card,
+    .feature-box,
+    .glass-card,
+    .card,
+    .login-card,
+    .signup-card,
+    .formula-card,
+    .formula-note,
+    .t-wrap,
+    .res-panel {
+      border-radius: var(--radius-sm) !important;
+      box-shadow: var(--shadow) !important;
+      background-image: none !important;
+    }
+
+    .hero-section::before,
+    .hero-section::after,
+    .pg-hero::after,
+    .cta-banner::before,
+    .feat-card::before {
+      display: none !important;
+    }
+
+    .hero-section,
+    .pg-hero,
+    .cta-banner {
+      background: var(--bg-card) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text) !important;
+      padding: 2rem !important;
+      text-align: left !important;
+    }
+
+    .cta-title,
+    .cta-sub {
+      color: var(--text) !important;
+    }
+
+    .btn-primary-cal,
+    .btn-outline-cal,
+    .btn-white,
+    .btn-go,
+    .btn-success,
+    .login-btn,
+    .signup-btn,
+    .btn-primary {
+      background: var(--accent) !important;
+      border: 1px solid var(--accent) !important;
+      border-radius: var(--radius-sm) !important;
+      box-shadow: none !important;
+      color: #fff !important;
+      transform: none !important;
+    }
+
+    .btn-outline-cal {
+      background: transparent !important;
+      color: var(--accent) !important;
+    }
+
+    .btn-primary-cal:hover,
+    .btn-outline-cal:hover,
+    .btn-white:hover,
+    .btn-go:hover,
+    .btn-success:hover,
+    .login-btn:hover,
+    .signup-btn:hover,
+    .btn-primary:hover {
+      background: var(--accent-2) !important;
+      color: #fff !important;
+      transform: none !important;
+    }
+
+    .feat-card:hover,
+    .step-card:hover,
+    .stat-card:hover,
+    .feature-box:hover,
+    .glass-card:hover,
+    .c-card:hover,
+    .login-card:hover,
+    .signup-card:hover {
+      transform: none !important;
+    }
+
+    .hero-chip,
+    .feat-badge,
+    .bp,
+    .r-cat,
+    code.p {
+      border-radius: var(--radius-sm) !important;
+    }
+
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════════ -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <span class="brand-badge"><i class="bi bi-fire"></i></span>
+        CaLoRIX
+      </a>
+
+      <!-- Mobile toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible content -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+
+        <!-- Left nav -->
+        <ul class="navbar-nav me-auto align-items-lg-center gap-lg-1 mt-2 mt-lg-0">
+
+          <li class="nav-item">
+            <a class="nav-link {% block nav_home %}{% endblock %}" href="{% url 'home' %}">
+              <i class="bi bi-house-door me-1"></i>Home
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link {% block nav_about %}{% endblock %}" href="{% url 'aboutUs' %}">
+              <i class="bi bi-info-circle me-1"></i>About Us
+            </a>
+          </li>
+
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% block nav_explore %}{% endblock %}" href="#" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-compass me-1"></i>Explore
+            </a>
+            <ul class="dropdown-menu">
+              <li><span class="dropdown-header">Nutrition</span></li>
+              <li>
+                {% if user.is_authenticated %}
+                <a class="dropdown-item" href="{% url 'bmr' %}">
+                  <i class="bi bi-calculator"></i> BMR Calculator
+                </a>
+                {% else %}
+                <a class="dropdown-item text-muted" href="{% url 'login' %}?next=/BMR/">
+                  <i class="bi bi-lock"></i> BMR Calculator (Login required)
+                </a>
+              
+                {% endif %}
+              </li>
+
+              <li>
+                {% if user.is_authenticated %}
+                <a class="dropdown-item" href="{% url 'bmi' %}">
+                  <i class="bi bi-bar-chart-line"></i> BMI Calculator
+                </a>
+                {% else %}
+                <a class="dropdown-item text-muted" href="{% url 'login' %}?next=/BMI/">
+                  <i class="bi bi-lock"></i> BMI Calculator (Login required)
+                </a>
+                {% endif %}
+              </li>
+              <li>
+                {% if user.is_authenticated %}
+                 <a class="dropdown-item text-muted" href="{% url 'dashboard' %}">
+                  <i class="bi bi-lock"></i> Your Dashboard
+                </a>
+                {% else %}
+                <a class="dropdown-item text-muted" href="{% url 'dashboard' %}?next=/dashboard/">
+                  <i class="bi bi-lock"></i> Your Dashboard (Login required)
+                </a>
+                {% endif %}
+              </li>
+              <a class="dropdown-item" href="#">
+                <i class="bi bi-journal-text"></i> Food Diary
+              </a>
+          </li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li><span class="dropdown-header">More</span></li>
+          <li>
+            <a class="dropdown-item" href="#">
+              <i class="bi bi-trophy"></i> Challenges
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">
+              <i class="bi bi-headset"></i> Support
+            </a>
+          </li>
+        </ul>
+        </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">
+            <i class="bi bi-box-arrow-right me-1"></i>logout </a>
+          {% endif %}
+        </li>
+        </ul>
+
+        <!-- Right: Search + Toggle -->
+        <div class="d-flex align-items-center gap-3 mt-2 mt-lg-0 flex-wrap">
+
+          <!-- Search -->
+          <div class="search-wrap">
+            <input type="search" class="search-input" name="q" placeholder="Search foods, recipes…"
+              value="{{ request.GET.q }}" autocomplete="off" />
+            <i class="bi bi-search search-icon"></i>
+          </div>
+
+          <!-- Theme Toggle -->
+          <div class="theme-switch-wrap" title="Toggle dark mode">
+            <i class="bi bi-sun-fill theme-icon" id="icon-sun"></i>
+            <label class="t-switch">
+              <input type="checkbox" id="themeToggle" />
+              <span class="t-slider"></span>
+            </label>
+            <i class="bi bi-moon-stars-fill theme-icon" id="icon-moon"></i>
+          </div>
+
+        </div>
+      </div><!-- end collapse -->
+
+    </div>
+  </nav>
+
+
+  <!-- ════════════════════════════════════════════
+       OFFCANVAS SIDEBAR
+  ════════════════════════════════════════════ -->
+  <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+    aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+        <i class="bi bi-layout-sidebar me-2" style="color:var(--accent)"></i>Sidebar
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <p style="color:var(--text-sub);font-size:.9rem;line-height:1.6">
+        Sidebar content goes here. Add navigation, filters, or widgets.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════
+       DJANGO FLASH MESSAGES
+  ════════════════════════════════════════════ -->
+  {% if messages %}
+  <div class="flash-container">
+    {% for message in messages %}
+    <div class="flash-msg {{ message.tags }}">
+      {% if 'success' in message.tags %}<i class="bi bi-check-circle-fill" style="color:#22c55e;flex-shrink:0"></i>
+      {% elif 'error' in message.tags %}<i class="bi bi-x-circle-fill" style="color:#ef4444;flex-shrink:0"></i>
+      {% elif 'warning' in message.tags %}<i class="bi bi-exclamation-triangle-fill"
+        style="color:#f59e0b;flex-shrink:0"></i>
+      {% else %}<i class="bi bi-info-circle-fill" style="color:var(--accent);flex-shrink:0"></i>
+      {% endif %}
+      <span style="color:var(--text)">{{ message }}</span>
+      <button class="flash-close" onclick="this.closest('.flash-msg').remove()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+
+  <!-- ════════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════════ -->
+  <main class="main-wrapper">
+    <div class="container">
+      {% block content %}
+      <!-- child templates inject content here -->
+      {% endblock %}
+    </div>
+  </main>
+
+
+  <!-- ════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container d-flex flex-column flex-sm-row
+                align-items-center justify-content-between gap-2">
+      <span>
+        <span style="color:var(--accent)">●</span>&nbsp;
+        <strong style="font-family:Georgia,'Times New Roman',serif;font-size:.9rem;
+                       color:var(--text)">CaLoRIX</strong>
+        &nbsp;·&nbsp; &copy; {% now "Y" %} All rights reserved.
+      </span>
+      <span class="d-flex gap-3">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#">About</a>
+        <a href="#">Privacy</a>
+        <a href="#">Contact</a>
+      </span>
+    </div>
+  </footer>
+
+
+  <!-- ════════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════ -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+  <script>
+    /* ── Theme persistence ─────────────────────────────────────── */
+    const html = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const KEY = 'calorix-theme';
+
+    function applyTheme(t) {
+      html.setAttribute('data-theme', t);
+      toggle.checked = (t === 'dark');
+      localStorage.setItem(KEY, t);
+    }
+
+    const saved = localStorage.getItem(KEY) ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(saved);
+
+    toggle.addEventListener('change', () =>
+      applyTheme(toggle.checked ? 'dark' : 'light')
+    );
+
+    /* ── Auto-dismiss flash messages after 5 s ─────────────────── */
+    setTimeout(() => {
+      document.querySelectorAll('.flash-msg').forEach(el => {
+        el.style.transition = 'opacity .35s ease, transform .35s ease';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(16px)';
+        setTimeout(() => el.remove(), 350);
+      });
+    }, 5000);
+
+    /* ── Auto active-link ──────────────────────────────────────── */
+    const path = window.location.pathname;
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && href !== '#') {
+        if (path === href || (href !== '/' && path.startsWith(href))) {
+          link.classList.add('active-link');
+        }
+      }
+    });
+  </script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

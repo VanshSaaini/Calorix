@@ -1,0 +1,700 @@
+{% extends 'base.html' %}
+
+{% block title %}Home · CaLoRIX{% endblock %}
+{% block nav_explore %}active-link{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ─── Hero ──────────────────────────────────────────── */
+  .hero-section {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-2) 70%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 4rem 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    right: -120px;
+    top: -120px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    left: -80px;
+    bottom: -80px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-glow);
+    border-radius: 50px;
+    padding: .28rem .9rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    letter-spacing: -.04em;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-sub);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary-cal {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: .75rem 1.8rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    box-shadow: 0 6px 20px var(--accent-glow);
+    transition: all var(--transition);
+  }
+
+  .btn-primary-cal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px var(--accent-glow);
+    color: #fff;
+  }
+
+  .btn-outline-cal {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: .73rem 1.8rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    transition: all var(--transition);
+  }
+
+  .btn-outline-cal:hover {
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+    color: var(--accent);
+  }
+
+  /* ─── Stats row ─────────────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .stat-num {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--accent);
+    letter-spacing: -.03em;
+  }
+
+  .stat-lbl {
+    font-size: .8rem;
+    color: var(--text-sub);
+    font-weight: 600;
+    margin-top: .2rem;
+  }
+
+  /* ─── Section header ────────────────────────────────── */
+  .sec-hdr {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--text);
+    letter-spacing: -.02em;
+    margin-bottom: .5rem;
+  }
+
+  .sec-hdr span {
+    color: var(--accent);
+  }
+
+  .sec-sub {
+    color: var(--text-sub);
+    font-size: .92rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* ─── Feature cards ─────────────────────────────────── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .feat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem 1.6rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .feat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .feat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .feat-card:hover::before {
+    opacity: 1;
+  }
+
+  .feat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    transition: background var(--transition);
+  }
+
+  .feat-card:hover .feat-icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+  }
+
+  .feat-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: .5rem;
+  }
+
+  .feat-desc {
+    font-size: .875rem;
+    color: var(--text-sub);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .feat-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: .2rem .65rem;
+    border-radius: 50px;
+  }
+
+  .badge-live {
+    background: rgba(34, 197, 94, .15);
+    color: var(--accent);
+  }
+
+  .badge-soon {
+    background: rgba(245, 158, 11, .12);
+    color: #b45309;
+  }
+
+  .feat-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: .9rem;
+    opacity: 0;
+    transition: opacity var(--transition), gap var(--transition);
+  }
+
+  .feat-card:hover .feat-arrow {
+    opacity: 1;
+    gap: .5rem;
+  }
+
+  /* ─── Lock overlay for unauthenticated ──────────────── */
+  .feat-card.locked {
+    cursor: pointer;
+  }
+
+  .lock-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .75rem;
+    color: var(--text-sub);
+    margin-top: .7rem;
+  }
+
+  /* ─── How it works ──────────────────────────────────── */
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 3.5rem;
+    position: relative;
+  }
+
+  .step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.6rem 1.4rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform var(--transition);
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+
+  .step-title {
+    font-weight: 700;
+    font-size: .95rem;
+    color: var(--text);
+    margin-bottom: .4rem;
+  }
+
+  .step-desc {
+    font-size: .845rem;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+
+  /* ─── CTA banner ────────────────────────────────────── */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    box-shadow: 0 12px 40px var(--accent-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: #fff;
+    margin-bottom: .6rem;
+    letter-spacing: -.02em;
+  }
+
+  .cta-sub {
+    color: rgba(255, 255, 255, .82);
+    font-size: .95rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .btn-white {
+    background: #fff;
+    color: var(--accent-2);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: .75rem 2rem;
+    font-weight: 700;
+    font-size: .95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+    transition: all var(--transition);
+  }
+
+  .btn-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+    color: var(--accent-2);
+  }
+
+  /* Header */
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* Card */
+  .glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: all var(--transition);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .stat-title {
+    font-size: .8rem;
+    color: var(--text-sub);
+  }
+
+  .stat-value {
+    font-family: 'Raleway';
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: var(--accent);
+  }
+
+  /* Chart Card */
+  .chart-card {
+    padding: 1.2rem;
+  }
+
+  .chart-title {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: .8rem;
+  }
+
+  /* Responsive spacing */
+  @media(max-width:768px) {
+    .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+  .form-floating label {
+    color: var(--text-sub);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-glow);
+  }
+
+  input[type="date"] {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .form-label {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Fitness Dashboard</h3>
+  </div>
+
+  <!-- DATE FILTER -->
+  <div class="card p-3 mb-4 shadow-sm">
+    <div class="row g-3">
+
+      <div class="col-md-5">
+        <label class="form-label small">Start Date</label>
+        <input type="date" id="startDate" class="form-control">
+      </div>
+
+      <div class="col-md-5">
+        <label class="form-label small">End Date</label>
+        <input type="date" id="endDate" class="form-control">
+      </div>
+
+      <div class="col-md-2 d-flex align-items-end">
+        <button onclick="fetchData()" class="btn btn-success w-100">
+          Apply
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3 col-6"><div class="card p-3 text-center"><h6>Weight</h6><h3 id="weightValue">--</h3></div></div>
+    <div class="col-md-3 col-6"><div class="card p-3 text-center"><h6>BMI</h6><h3 id="bmiValue">--</h3></div></div>
+    <div class="col-md-3 col-6"><div class="card p-3 text-center"><h6>BMR</h6><h3 id="bmrValue">--</h3></div></div>
+    <div class="col-md-3 col-6"><div class="card p-3 text-center"><h6>Calories</h6><h3 id="calValue">--</h3></div></div>
+  </div>
+
+  <!-- META -->
+  <div class="card p-3 mb-4 d-flex justify-content-between">
+    <div>Last Updated: <strong id="lastUpdated">--</strong></div>
+    <div>Total Entries: <strong id="totalEntries">--</strong></div>
+  </div>
+
+  <!-- FORM -->
+  <div class="card p-4 mb-4">
+    <h6 class="mb-3">Update Stats</h6>
+
+    <form id="updateForm">
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <input type="number" id="weightInput" class="form-control" placeholder="Weight (kg)" required>
+        </div>
+
+        <div class="col-md-6">
+          <input type="number" id="heightInput" class="form-control" placeholder="Height (cm)" required>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-success w-100">Save Entry</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="row g-4">
+    <div class="col-md-6"><canvas id="weightChart"></canvas></div>
+    <div class="col-md-6"><canvas id="bmiChart"></canvas></div>
+    <div class="col-md-6"><canvas id="bmrChart"></canvas></div>
+    <div class="col-md-6"><canvas id="calorieChart"></canvas></div>
+  </div>
+
+</div>
+
+<script>
+const charts = {};
+
+function createChart(id) {
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'line',
+    data: { labels: [], datasets: [{ data: [] }] }
+  });
+}
+
+createChart("weightChart");
+createChart("bmiChart");
+createChart("bmrChart");
+createChart("calorieChart");
+
+function getLast(arr) {
+  return arr && arr.length ? arr[arr.length - 1] : '--';
+}
+
+async function fetchData() {
+  let url = "/api/data/";
+
+  const start = document.getElementById("startDate").value;
+  const end = document.getElementById("endDate").value;
+
+  if (start && end) {
+    url += `?start=${start}&end=${end}`;
+  }
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  charts.weightChart.data.labels = data.labels;
+  charts.weightChart.data.datasets[0].data = data.weight;
+
+  charts.bmiChart.data.labels = data.labels;
+  charts.bmiChart.data.datasets[0].data = data.bmi;
+
+  charts.bmrChart.data.labels = data.labels;
+  charts.bmrChart.data.datasets[0].data = data.bmr;
+
+  charts.calorieChart.data.labels = data.labels;
+  charts.calorieChart.data.datasets[0].data = data.calories;
+
+  Object.values(charts).forEach(c => c.update());
+
+  document.getElementById('weightValue').innerText = getLast(data.weight);
+  document.getElementById('bmiValue').innerText = getLast(data.bmi);
+  document.getElementById('bmrValue').innerText = getLast(data.bmr);
+  document.getElementById('calValue').innerText = getLast(data.calories);
+
+  document.getElementById("lastUpdated").innerText =
+    data.labels.length ? data.labels[data.labels.length - 1] : "--";
+
+  document.getElementById("totalEntries").innerText = data.labels.length;
+}
+
+document.getElementById("updateForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  await fetch("/api/update-stats/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCSRFToken()
+    },
+    body: JSON.stringify({
+      weight: weightInput.value,
+      height_cm: heightInput.value
+    })
+  });
+
+  fetchData();
+  updateForm.reset();
+});
+
+function getCSRFToken() {
+  return document.cookie.split('; ')
+    .find(row => row.startsWith('csrftoken'))
+    ?.split('=')[1];
+}
+
+fetchData();
+</script>
+
+{% endblock %}

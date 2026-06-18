@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up · CaLoRIX{% endblock %}
+
+{% block content %}
+
+<div class="signup-wrapper d-flex justify-content-center align-items-center">
+  <div class="signup-card">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <div class="signup-icon">
+        <i class="bi bi-person-plus-fill"></i>
+      </div>
+      <h2 class="signup-title">Create Account</h2>
+      <p class="signup-sub">Start your fitness journey with CaLoRIX</p>
+    </div>
+
+    <!-- Form -->
+    <form id="signupForm" method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      <div class="row g-3">
+        {% if messages %}
+        <div class="alert alert-warning" role="alert">
+          {% for message in messages %}
+          {{ message }}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Name -->
+        <div class="col-md-6">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control custom-input" name="fname" placeholder="John" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control custom-input" name="lname" placeholder="Doe" required>
+        </div>
+
+        <!-- Email -->
+        <div class="col-12">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control custom-input" name="email" placeholder="you@example.com" required
+            autocomplete="email">
+        </div>
+
+        <!-- Password -->
+        <div class="col-12 position-relative">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control custom-input" name="password" id="password" required
+            autocomplete="new-password">
+          <i class="bi bi-eye toggle-pass" id="togglePass"></i>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-12 position-relative">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-control custom-input" name="confirm_password" id="confirmPassword" required
+            autocomplete="new-password">
+          <i class="bi bi-eye toggle-pass" id="toggleConfirm"></i>
+        </div>
+
+        <!-- Checkbox -->
+        <div class="col-12">
+          <div class="form-check custom-check">
+            <input class="form-check-input" type="checkbox" id="terms" required>
+            <label class="form-check-label" for="terms">
+              I agree to the <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn signup-btn w-100 mt-4">Create Account</button>
+
+    </form>
+
+    <!-- Login redirect -->
+    <p class="text-center mt-4 small">
+      Already have an account?
+      <a href="{% url 'login' %}" class="login-link">Login</a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+  .signup-wrapper {
+    min-height: 80vh;
+  }
+
+  .signup-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow);
+  }
+
+  .signup-icon {
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+  }
+
+  .signup-title {
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+
+  .signup-sub {
+    color: var(--text-sub);
+    font-size: 0.9rem;
+  }
+
+  .custom-input {
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    padding: 0.6rem 0.9rem;
+    background: var(--bg-2);
+    color: var(--text);
+    transition: all var(--transition);
+  }
+
+  .custom-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .toggle-pass {
+    position: absolute;
+    right: 14px;
+    top: 38px;
+    cursor: pointer;
+    color: var(--text-sub);
+  }
+
+  .custom-check a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .signup-btn {
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.65rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .signup-btn:hover {
+    background: var(--accent-2);
+  }
+
+  .login-link {
+    color: var(--accent);
+    font-weight: 500;
+  }
+</style>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+  /* Toggle password visibility */
+  function makeToggle(btnId, inputId) {
+    document.getElementById(btnId).addEventListener('click', function () {
+      const input = document.getElementById(inputId);
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      this.classList.toggle('bi-eye', !isPass);
+      this.classList.toggle('bi-eye-slash', isPass);
+    });
+  }
+  makeToggle('togglePass', 'password');
+  makeToggle('toggleConfirm', 'confirmPassword');
+
+  /* Client-side password-match check before submitting */
+  document.getElementById('signupForm').addEventListener('submit', function (e) {
+    const pw = document.getElementById('password').value;
+    const cpw = document.getElementById('confirmPassword').value;
+    if (pw !== cpw) {
+      e.preventDefault();
+      alert('Passwords do not match. Please try again.');
+    }
+  });
+</script>
+{% endblock %}
